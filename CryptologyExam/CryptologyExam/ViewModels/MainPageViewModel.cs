@@ -5,6 +5,7 @@ using System.Windows.Input;
 using CryptologyExam.Enums;
 using CryptologyExam.Services.Interfaces;
 using Prism.Navigation;
+using Prism.Services;
 using Xamarin.Forms;
 
 namespace CryptologyExam.ViewModels
@@ -15,6 +16,7 @@ namespace CryptologyExam.ViewModels
         private readonly IAffineService _affineService;
         private readonly IAtbashService _atbashService;
         private readonly ISezarService _sezarService;
+        private readonly IPageDialogService _pageDialogService;
 
         private ObservableCollection<AlgorithmTypeEnum> algoritmList = new ObservableCollection<AlgorithmTypeEnum>();
         public ObservableCollection<AlgorithmTypeEnum> AlgorithmList
@@ -136,12 +138,13 @@ namespace CryptologyExam.ViewModels
 
 
 
-        public MainPageViewModel(INavigationService navigationService, IAtbashService atbashService, ISezarService sezarService, IAffineService affineService) : base(navigationService)
+        public MainPageViewModel(INavigationService navigationService, IAtbashService atbashService, ISezarService sezarService, IAffineService affineService, IPageDialogService pageDialogService) : base(navigationService)
         {
             _atbashService = atbashService;
             _affineService = affineService;
             _sezarService = sezarService;
             _navigationService = navigationService;
+            _pageDialogService = pageDialogService;
             algoritmList.Add(AlgorithmTypeEnum.Atbash);
             algoritmList.Add(AlgorithmTypeEnum.Sezar);
             algoritmList.Add(AlgorithmTypeEnum.Affine);
@@ -198,6 +201,7 @@ namespace CryptologyExam.ViewModels
                             }
                             else
                             {
+                                await _pageDialogService.DisplayAlertAsync("Hata", "Kaydrıma miktarı 0 dan büyük yada eşit olmalıdır.", "Tamam");
 
                             }
 
@@ -208,6 +212,11 @@ namespace CryptologyExam.ViewModels
                             {
                                 var result = _sezarService.DecryptSezar(_cryptionPlainText, ShiftAmount);
                                 ResultPlainText = result;
+                            }
+                            else
+                            {
+                                await _pageDialogService.DisplayAlertAsync("Hata", "Kaydrıma miktarı 0 dan büyük yada eşit olmalıdır.", "Tamam");
+
                             }
 
                         }
@@ -220,12 +229,22 @@ namespace CryptologyExam.ViewModels
                                     var result = _affineService.EncryptAffine(_cryptionPlainText, NumberA, NumberB);
                                     ResultPlainText = result;
                                 }
+                                else
+                                {
+                                    await _pageDialogService.DisplayAlertAsync("Hata", "Sayılar aralarında asal olmalıdır.", "Tamam");
+
+                                }
+                            }
+                            else
+                            {
+                                await _pageDialogService.DisplayAlertAsync("Hata", "Sayılar 0 dan büyük olmalıdır.", "Tamam");
+
                             }
 
                         }
                         else if (SelectedAlgorithmType == AlgorithmTypeEnum.Affine && SelectedOperationType == OperationTypeEnum.decryption)
                         {
-                            if (NumberB > 0)
+                            if (NumberB > 0 && NumberA > 0)
                             {
                                 if (AreCoprime(NumberA, NumberB))
                                 {
@@ -233,13 +252,27 @@ namespace CryptologyExam.ViewModels
                                     ResultPlainText = result;
 
                                 }
+                                else
+                                {
+                                    await _pageDialogService.DisplayAlertAsync("Hata", "Sayılar aralarında asal olmalıdır.", "Tamam");
+
+                                }
+                            }
+                            else
+                            {
+                                await _pageDialogService.DisplayAlertAsync("Hata", "Sayılar 0 dan büyük olmalıdır.", "Tamam");
+
                             }
 
                         }
                         else
                         {
-                            ResultPlainText = "yapılamadı";
+                            await _pageDialogService.DisplayAlertAsync("Hata", "Şifreleme yapılamadı.", "Tamam");
                         }
+                    }
+                    else
+                    {
+                        await _pageDialogService.DisplayAlertAsync("Hata", "Şifrelenecek Metin boş bırakılamaz.", "Tamam");
                     }
 
                 });
