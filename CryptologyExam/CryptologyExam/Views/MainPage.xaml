@@ -1,0 +1,53 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="CryptologyExam.MainPage"
+             BackgroundColor="Orange"
+             xmlns:ios="clr-namespace:Xamarin.Forms.PlatformConfiguration.iOSSpecific;assembly=Xamarin.Forms.Core" 
+ios:Page.UseSafeArea="true"
+             >
+    <ContentPage.Content>
+
+        <StackLayout Margin="10" Orientation="Vertical" BackgroundColor="Orange">
+            <StackLayout>
+                <Label FontAttributes="Bold" TextColor="Black" Margin="5,0,0,0" Text="Algoritma:"></Label>
+                <Picker SelectedItem="{Binding SelectedAlgorithmType}" Margin="5" ItemsSource="{Binding AlgorithmList}" ItemDisplayBinding="{Binding .}"></Picker>
+                <Label FontAttributes="Bold" TextColor="Black" Margin="5,0,0,0" Text="Encryption/Decryption:"></Label>
+                <Picker SelectedItem="{Binding SelectedOperationType}" Margin="5" ItemsSource="{Binding OperationTypeList}" ItemDisplayBinding="{Binding .}"></Picker>
+                <StackLayout Margin="5" Orientation="Horizontal">
+                    <Label Text="Aralarında Asal 2 sayı (Affine):" VerticalOptions="Center"></Label>
+                    <StackLayout Orientation="Horizontal">
+                        <Entry Keyboard="Numeric" Text="{Binding NumberA}" Placeholder="a"></Entry>
+                        <Entry Keyboard="Numeric" Text="{Binding NumberB}" Placeholder="b"></Entry>
+                    </StackLayout>
+
+                </StackLayout>
+
+                <StackLayout Margin="5" Orientation="Horizontal">
+                    <Label Text="Kaydırma Miktarı (Sezar):" VerticalOptions="Center"></Label>
+                    <StackLayout Orientation="Horizontal">
+                        <Entry Keyboard="Numeric" Placeholder="s" Text="{Binding ShiftAmount}"></Entry>
+                    </StackLayout>
+
+                </StackLayout>
+            </StackLayout>
+            <StackLayout>
+
+                <Entry Text="{Binding CryptionPlainText}" Margin="5" HeightRequest="40" Placeholder="Şifrelenecek Metni Giriniz.."></Entry>
+                <Button Margin="5" Text="Uygula" TextColor="Black"  HeightRequest="40" WidthRequest="100" BorderColor="Black" BackgroundColor="White" Command="{Binding ApplyCommand}"></Button>
+
+            </StackLayout>
+
+            <StackLayout Orientation="Horizontal">
+                <Label FontAttributes="Bold" Margin="5" Text="Sonuç:"></Label>
+                <Label FontAttributes="Bold" Margin="5" Text="{Binding ResultPlainText}"></Label>
+
+            </StackLayout>
+
+        </StackLayout>
+    </ContentPage.Content>
+
+
+
+</ContentPage>
+
